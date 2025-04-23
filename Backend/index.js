@@ -49,7 +49,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(frontendPath, 'index.html'));
     });
 }
-
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
