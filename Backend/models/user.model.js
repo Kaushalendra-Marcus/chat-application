@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         trim: true,
         index: true,
-        minlength: [5, 'Username must be at least 5 characters long']
+        // minlength: [5, 'Username must be at least 5 characters long']
     },
     fullName: {
         type: String,
@@ -20,13 +20,13 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
         select: false,
-        validate: {
-            validator: function (value) {
-                // Must be 8+ chars, at least 1 number, and 1 special character
-                return /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(value);
-            },
-            message: 'Password must be at least 8 characters long and include a number and a special character.'
-        }
+        // validate: {
+        //     validator: function (value) {
+        //         // Must be 8+ chars, at least 1 number, and 1 special character
+        //         return /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(value);
+        //     },
+        //     message: 'Password must be at least 8 characters long and include a number and a special character.'
+        // }
     },
     email: {
         type: String,
