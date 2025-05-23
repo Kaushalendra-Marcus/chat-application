@@ -15,7 +15,7 @@ export const getReceiverSocketId = (receiverId) => {
 
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: "https://cokkie-chat.onrender.com",
         methods: ["GET", "POST"],
         credentials: true,
     },
