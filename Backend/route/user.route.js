@@ -3,10 +3,10 @@ import { signUp,signIn, logOut, getUserProfile,deleteAccount } from '../controll
 import secureRoute from '../middleware/secureRoute.js'
 const router = express.Router()
 
-router.use((req, res, next) => {
-    console.log('User Route - Incoming path:', req.path);
-    next();
-});
+// router.use((req, res, next) => {
+//     console.log('User Route - Incoming path:', req.path);
+//     next();
+// });
 router.post("/signup", signUp)
 router.post("/signin",signIn)
 

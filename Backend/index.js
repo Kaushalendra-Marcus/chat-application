@@ -17,7 +17,7 @@ const MONGO_URI = process.env.MONGO_DB_URI;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'https://cokkie-chat-q6sj.onrender.com',  // Frontend ka URL
+    origin: 'http://localhost:3001',  // Frontend ka URL
     credentials: true
 }));
 
@@ -30,24 +30,26 @@ mongoose.connect(MONGO_URI)
 app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
-app.get('/', (req, res) => {
-    res.send("Backend is running");
-});
 
 // Production Deployment
 if (process.env.NODE_ENV === 'production') {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    
-    const frontendPath = path.join(__dirname, './Frontend/dist');
-    console.log("Serving frontend from:", frontendPath);
-
-    app.use(express.static(frontendPath));
-    app.use('/assets', express.static(path.join(frontendPath, 'assets')));
-    
-    app.get(/.*/, (req, res) => {
-        res.sendFile(path.join(frontendPath, 'index.html'));
+    const dirPath = path.resolve();
+    app.use(express.static("./Frontend/dist"));
+    app.get('*',(req,res)=>{
+        res.sendFile(path.resolve(dirPath,'./Frontend/dist','index.html'));
     });
+    // const __filename = fileURLToPath(import.meta.url);
+    // const __dirname = path.dirname(__filename);
+    
+    // const frontendPath = path.join(__dirname, './Frontend/dist');
+    // console.log("Serving frontend from:", frontendPath);
+
+    // app.use(express.static(frontendPath));
+    // app.use('/assets', express.static(path.join(frontendPath, 'assets')));
+    
+    // app.get(/.*/, (req, res) => {
+    //     res.sendFile(path.join(frontendPath, 'index.html'));
+    // });
 }
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

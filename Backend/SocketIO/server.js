@@ -1,43 +1,47 @@
-import { Server } from "socket.io"
-import http from 'http'
-import express from 'express'
+import { Server } from "socket.io";
+import http from 'http';
+import express from 'express';
 
-const app = express()
+const app = express();
+const server = http.createServer(app);
 
-const server = http.createServer(app)
+// Store userId to socket.id mapping
+const users = {};
+
+// Utility function to get socket id by userId
+export const getReceiverSocketId = (receiverId) => {
+    return users[receiverId];
+};
+
 const io = new Server(server, {
     cors: {
-        origin: "https://cokkie-chat-q6sj.onrender.com",
+        origin: "*",
         methods: ["GET", "POST"],
-        credentials : true
-    }
-})
+        credentials: true,
+    },
+});
 
-// real time message
-export const getReceiverSocketId = (receiverId)=>{
-    return users[receiverId]
-}
-
-const users = {}
+// Socket.IO connection
 io.on("connection", (socket) => {
-    console.log("New Client connected", socket.id);
+    console.log("New Client connected:", socket.id);
+
     const userId = socket.handshake.query.userId;
-    console.log("Users Id are..." , userId);
-    
-    if(userId){
+    console.log("User ID:", userId);
+
+    if (userId) {
         users[userId] = socket.id;
-        console.log( "hello my users ....",users);
+        console.log("Online Users:", users);
     }
-    io.emit("getOnlineUsers",Object.keys(users))
 
+    io.emit("getOnlineUsers", Object.keys(users));
 
-
-// for disconnect
     socket.on("disconnect", () => {
-        console.log("Client disconnected", socket.id);
-        delete users[userId]
-        io.emit("getOnlineUsers",Object.keys(users))
-    })
-})
+        console.log("Client disconnected:", socket.id);
+        if (userId) {
+            delete users[userId];
+        }
+        io.emit("getOnlineUsers", Object.keys(users));
+    });
+});
 
-export { app, io, server }
+export { app, io, server };
